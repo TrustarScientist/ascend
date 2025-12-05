@@ -14,7 +14,8 @@
                         // Deep primary blue for growth and trust
                         primary: { 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
                         // Dark slate for professionalism
-                        slate: { 900: '#0f172a', 800: '#1e293b' }
+                        slate: { 900: '#0f172a', 800: '#1e293b' },
+                        accent: '#f59e0b', // Amber for highlights
                     },
                     fontFamily: { sans: ['Inter', 'sans-serif'] }
                 }
@@ -24,8 +25,55 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* Custom CSS for Animations */
+        @keyframes pulse-shadow {
+            0% {
+                box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(37, 99, 235, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+            }
+        }
+
+        .cta-pulse {
+            animation: pulse-shadow 2s infinite;
+        }
+
+        /* FIX: Define the missing fadeIn animation for the Hero section text */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 1s ease-out forwards;
+        }
+
         .gradient-bg {
-            background-image: linear-gradient(to top, #f8fafc, #ffffff);
+            background-image: linear-gradient(to bottom, #ffffff, #f1f5f9);
+        }
+
+        /* Platform Mockup Styles (for visual appeal) */
+        .mockup-frame {
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transition: transform 0.3s ease;
+        }
+
+        .mockup-frame:hover {
+            transform: translateY(-5px);
         }
     </style>
 </head>
@@ -33,7 +81,7 @@
 <body class="font-sans text-slate-900 gradient-bg">
 
     <!-- Header & Navigation -->
-    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm shadow-md">
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <!-- Logo/Brand -->
@@ -41,374 +89,529 @@
 
                 <!-- Desktop Navigation -->
                 <nav class="hidden md:flex space-x-8 text-sm font-medium">
-                    <a href="#mission" class="text-slate-600 hover:text-primary-600 transition-colors">Mission</a>
-                    <a href="#pillars" class="text-slate-600 hover:text-primary-600 transition-colors">Pillars</a>
-                    <a href="#os" class="text-slate-600 hover:text-primary-600 transition-colors">Tools</a>
+                    <a href="#metrics" class="text-slate-600 hover:text-primary-600 transition-colors">Impact</a>
+                    <a href="#how-it-works" class="text-slate-600 hover:text-primary-600 transition-colors">How It
+                        Works</a>
+                    <a href="#features" class="text-slate-600 hover:text-primary-600 transition-colors">Features</a>
+                    <a href="#why-us"
+                        class="text-slate-600 hover:text-primary-600 transition-colors">Differentiators</a>
                     <a href="pricing.html" class="text-slate-600 hover:text-primary-600 transition-colors">Pricing</a>
                 </nav>
 
-                <!-- CTA Button -->
-                <a href="#"
+                <!-- CTA Button (Desktop) -->
+                <a href="#cta"
                     class="bg-primary-600 text-white text-sm font-semibold px-4 py-2 rounded-xl shadow-lg hover:bg-primary-700 transition-colors hidden md:block">
-                    Sign Up for Early Access
+                    Start Your Ascent
                 </a>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button"
+                    class="md:hidden text-slate-600 hover:text-primary-600 transition-colors p-2 rounded-lg">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- 1. Hero Section -->
-    <section class="pt-20 pb-32 md:pt-24 md:pb-40 text-center relative overflow-hidden">
+    <!-- Mobile Menu (Hidden) -->
+    <div id="mobile-menu" class="hidden md:hidden fixed inset-0 z-40 bg-white/95 backdrop-blur-md p-6 pt-16 shadow-xl">
+        <button id="close-mobile-menu"
+            class="absolute top-4 right-4 text-slate-600 hover:text-primary-600 p-2 rounded-lg">
+            <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+        <nav class="flex flex-col space-y-4 text-lg font-medium">
+            <a href="#metrics"
+                class="text-slate-700 hover:text-primary-600 transition-colors border-b border-slate-100 pb-2">Impact</a>
+            <a href="#how-it-works"
+                class="text-slate-700 hover:text-primary-600 transition-colors border-b border-slate-100 pb-2">How It
+                Works</a>
+            <a href="#features"
+                class="text-slate-700 hover:text-primary-600 transition-colors border-b border-slate-100 pb-2">Features</a>
+            <a href="#why-us"
+                class="text-slate-700 hover:text-primary-600 transition-colors border-b border-slate-100 pb-2">Differentiators</a>
+            <a href="pricing.html"
+                class="text-slate-700 hover:text-primary-600 transition-colors border-b border-slate-100 pb-2">Pricing</a>
+            <a href="#cta"
+                class="bg-primary-600 text-white text-center font-bold py-3 mt-4 rounded-xl shadow-lg hover:bg-primary-700 transition-colors">Start
+                Your Ascent</a>
+        </nav>
+    </div>
+
+    <!-- 1. Hero Section (Enhanced and Fixed) -->
+    <section class="pt-20 pb-16 md:pt-24 md:pb-24 text-center relative overflow-hidden">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Text now appears and animates due to the defined @keyframes fadeIn -->
             <span
-                class="inline-block px-3 py-1 text-sm font-semibold text-primary-700 bg-primary-100 rounded-full mb-4">Nigeria’s
-                Premier SME Platform</span>
-            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
+                class="inline-block px-4 py-1 text-sm font-semibold text-primary-700 bg-primary-100 rounded-full mb-4 opacity-0 animate-fadeIn"
+                style="animation-delay: 0.1s;">
+                Nigeria’s Premier SME Platform
+            </span>
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight opacity-0 animate-fadeIn"
+                style="animation-delay: 0.3s;">
                 Stop Juggling Apps. <br class="hidden sm:inline">Start Your <span
                     class="text-primary-600">Ascent.</span>
             </h1>
-            <p class="text-xl md:text-2xl text-slate-600 mb-10 max-w-2xl mx-auto">
-                ASCEND: The All-in-One SME Center for Empowerment and Growth. We unite every tool, connection, and
-                resource your business needs to formalize, scale, and thrive in one intelligent platform.
+            <p class="text-xl md:text-2xl text-slate-600 mb-10 max-w-2xl mx-auto opacity-0 animate-fadeIn"
+                style="animation-delay: 0.5s;">
+                The All-in-One SME Center for Empowerment and Growth, uniting every tool, connection, and resource your
+                business needs to formalize, scale, and thrive digitally.
             </p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <div class="flex flex-col sm:flex-row justify-center gap-4 opacity-0 animate-fadeIn"
+                style="animation-delay: 0.7s;">
                 <a href="#cta"
-                    class="bg-primary-600 text-white font-bold py-3 px-8 rounded-xl text-lg shadow-xl shadow-primary-500/30 hover:bg-primary-700 transition duration-300 transform hover:scale-[1.02]">
+                    class="bg-primary-600 text-white font-bold py-4 px-10 rounded-xl text-lg shadow-xl shadow-primary-500/50 hover:bg-primary-700 transition duration-300 transform hover:scale-[1.02] cta-pulse">
                     Sign Up for Early Access
                 </a>
                 <button id="open-video-modal"
-                    class="flex items-center justify-center bg-white border border-slate-300 text-slate-700 font-semibold py-3 px-8 rounded-xl text-lg shadow-md hover:bg-slate-50 transition duration-300">
-                    <i data-lucide="play-circle" class="w-5 h-5 mr-2"></i> Watch 2-Min Demo
+                    class="flex items-center justify-center bg-white border border-slate-300 text-slate-700 font-semibold py-4 px-10 rounded-xl text-lg shadow-md hover:bg-slate-100 transition duration-300">
+                    <i data-lucide="play-circle" class="w-5 h-5 mr-2 text-primary-600"></i> Watch 2-Min Demo
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- 2. The ASCEND Mission & Acronym -->
-    <section id="mission" class="py-20 bg-slate-800 text-white">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-4xl font-extrabold mb-4 text-white">What Does It Mean to ASCEND?</h2>
-            <p class="text-xl text-primary-300 mb-12 max-w-3xl mx-auto">
-                ASCEND is more than a name—it’s our promise and your pathway. It stands for our core mission as your
-                All-in-One SME Connection & Empowerment Network for Development.
-            </p>
-
-            <!-- Acronym Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                <!-- A: Access -->
-                <div class="p-4 rounded-xl border border-primary-500/50 bg-slate-900 shadow-xl">
-                    <i data-lucide="zap" class="w-8 h-8 text-primary-500 mb-2 mx-auto"></i>
-                    <h3 class="text-lg font-bold">Access</h3>
-                    <p class="text-sm text-slate-300">Vital capital, government services, and new markets.</p>
+    <!-- 2. Animated Metrics Section -->
+    <section id="metrics" class="py-12 bg-slate-800 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="flex flex-col items-center">
+                    <span id="metric-1" class="text-4xl md:text-5xl font-extrabold text-accent">1,200+</span>
+                    <p class="text-sm md:text-lg text-primary-300 mt-1">SMEs Supported</p>
                 </div>
-                <!-- S: Scale -->
-                <div class="p-4 rounded-xl border border-primary-500/50 bg-slate-900 shadow-xl">
-                    <i data-lucide="bar-chart-3" class="w-8 h-8 text-primary-500 mb-2 mx-auto"></i>
-                    <h3 class="text-lg font-bold">Scale</h3>
-                    <p class="text-sm text-slate-300">Operations with integrated intelligence and automation.</p>
+                <div class="flex flex-col items-center">
+                    <span id="metric-2" class="text-4xl md:text-5xl font-extrabold text-accent">600+</span>
+                    <p class="text-sm md:text-lg text-primary-300 mt-1">Tools Integrated</p>
                 </div>
-                <!-- C: Comply -->
-                <div class="p-4 rounded-xl border border-primary-500/50 bg-slate-900 shadow-xl">
-                    <i data-lucide="file-check-2" class="w-8 h-8 text-primary-500 mb-2 mx-auto"></i>
-                    <h3 class="text-lg font-bold">Comply</h3>
-                    <p class="text-sm text-slate-300">Seamlessly with CAC, tax, and regulatory requirements.</p>
+                <div class="flex flex-col items-center">
+                    <span id="metric-3" class="text-4xl md:text-5xl font-extrabold text-accent">85%</span>
+                    <p class="text-sm md:text-lg text-primary-300 mt-1">Growth Score Increase</p>
                 </div>
-                <!-- E: Empower -->
-                <div class="p-4 rounded-xl border border-primary-500/50 bg-slate-900 shadow-xl">
-                    <i data-lucide="brain" class="w-8 h-8 text-primary-500 mb-2 mx-auto"></i>
-                    <h3 class="text-lg font-bold">Empower</h3>
-                    <p class="text-sm text-slate-300">Your team with data-driven insights and targeted training.</p>
-                </div>
-                <!-- N: Network -->
-                <div class="p-4 rounded-xl border border-primary-500/50 bg-slate-900 shadow-xl">
-                    <i data-lucide="users-2" class="w-8 h-8 text-primary-500 mb-2 mx-auto"></i>
-                    <h3 class="text-lg font-bold">Network</h3>
-                    <p class="text-sm text-slate-300">Within a vibrant ecosystem of peers, suppliers, and buyers.</p>
-                </div>
-                <!-- D: Digitize -->
-                <div class="p-4 rounded-xl border border-primary-500/50 bg-slate-900 shadow-xl">
-                    <i data-lucide="cloud" class="w-8 h-8 text-primary-500 mb-2 mx-auto"></i>
-                    <h3 class="text-lg font-bold">Digitize</h3>
-                    <p class="text-sm text-slate-300">Your entire operation with modern, cloud-based tools.</p>
+                <div class="flex flex-col items-center">
+                    <span id="metric-4" class="text-4xl md:text-5xl font-extrabold text-accent">10+</span>
+                    <p class="text-sm md:text-lg text-primary-300 mt-1">Local Communities</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 3. The Six Pillars of Your Ascent -->
-    <section id="pillars" class="py-20 lg:py-28">
+    <!-- 3. How ASCEND Works (3-Step Flow Section) -->
+    <section id="how-it-works" class="py-20 lg:py-28">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-4xl md:text-5xl font-extrabold mb-4">The Six Pillars of Your Ascent</h2>
-                <p class="text-xl text-slate-600">Ascending is structured around six foundational pillars, each designed
-                    to elevate a critical part of your business journey.</p>
+                <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Your 3 Steps to Digital Growth</h2>
+                <p class="text-xl text-slate-600">Ascending simplifies your journey from informal to scaled enterprise
+                    in three key phases.</p>
             </div>
 
-            <!-- Pillars Grid -->
+            <div class="relative flex flex-col md:flex-row justify-between">
+                <!-- Connector Line (Desktop Only) -->
+                <div class="hidden md:block absolute top-10 left-0 right-0 h-1 bg-primary-100 mx-10">
+                    <div class="absolute top-0 h-1 bg-primary-500 w-full"
+                        style="clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);"></div>
+                </div>
+
+                <!-- Step 1 -->
+                <div class="flex-1 text-center p-4 md:p-0 relative mb-10 md:mb-0">
+                    <div
+                        class="w-20 h-20 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-4 relative z-10 shadow-xl border-4 border-white">
+                        <i data-lucide="user-plus" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <span class="text-sm font-bold text-primary-600 mb-2 block">STEP 1</span>
+                    <h3 class="text-2xl font-bold mb-3">Onboard & Formalize</h3>
+                    <p class="text-slate-600 max-w-xs mx-auto">Create your detailed business profile and integrate
+                        essential formal documentation (CAC, SMEDAN). Get your starting Ascending Score.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="flex-1 text-center p-4 md:p-0 relative mb-10 md:mb-0">
+                    <div
+                        class="w-20 h-20 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-4 relative z-10 shadow-xl border-4 border-white">
+                        <i data-lucide="layout-dashboard" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <span class="text-sm font-bold text-primary-600 mb-2 block">STEP 2</span>
+                    <h3 class="text-2xl font-bold mb-3">Unify & Manage</h3>
+                    <p class="text-slate-600 max-w-xs mx-auto">Connect your sales, marketing, and finance via the
+                        unified OS. Automate tasks and track performance from a single dashboard.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="flex-1 text-center p-4 md:p-0 relative">
+                    <div
+                        class="w-20 h-20 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-4 relative z-10 shadow-xl border-4 border-white">
+                        <i data-lucide="trending-up" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <span class="text-sm font-bold text-primary-600 mb-2 block">STEP 3</span>
+                    <h3 class="text-2xl font-bold mb-3">Scale & Fund</h3>
+                    <p class="text-slate-600 max-w-xs mx-auto">Use your improved Ascending Score to unlock tailored
+                        funding, expand your reach in the marketplace, and access premium resources.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Core Features / OS -->
+    <section id="features" class="py-20 lg:py-28 bg-primary-50/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-4xl md:text-5xl font-extrabold mb-4">The Unified Operating System (OS)</h2>
+                <p class="text-xl text-slate-600">Everything your business needs, integrated seamlessly. Stop juggling,
+                    start growing.</p>
+            </div>
+
+            <!-- Enhanced Tool Cards (using a new layout) -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-                <!-- Pillar 1: Access to Finance & Facilities -->
+                <!-- Feature Card 1: Finance & Compliance -->
                 <div
-                    class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100 group hover:shadow-xl transition duration-300">
-                    <i data-lucide="banknote" class="w-10 h-10 text-primary-600 mb-4 bg-primary-50 p-2 rounded-lg"></i>
-                    <h3 class="text-2xl font-bold mb-3">1. Access to Finance & Facilities</h3>
-                    <p class="text-slate-500 mb-4">Navigate the funding landscape with clarity and direct connections to
-                        capital.</p>
-                    <ul class="space-y-2 text-slate-600 text-sm">
-                        <li class="flex items-start gap-2"><i data-lucide="chevrons-right"
-                                class="w-4 h-4 text-primary-500 flex-shrink-0 mt-1"></i> Multi-Lender Loan Gateway</li>
-                        <li class="flex items-start gap-2"><i data-lucide="chevrons-right"
-                                class="w-4 h-4 text-primary-500 flex-shrink-0 mt-1"></i> Grant & Opportunity Hub</li>
-                        <li class="flex items-start gap-2"><i data-lucide="chevrons-right"
-                                class="w-4 h-4 text-primary-500 flex-shrink-0 mt-1"></i> Asset Financing & Leasing
-                            Partners</li>
-                    </ul>
+                    class="bg-white p-6 rounded-2xl shadow-xl border border-primary-200 group hover:shadow-2xl hover:border-primary-400 transition duration-300">
+                    <i data-lucide="banknote" class="w-8 h-8 text-primary-600 mb-3"></i>
+                    <h3 class="text-2xl font-bold mb-3">Financial Pathways</h3>
+                    <p class="text-slate-500 mb-4">Loan gateway, Grant Hub, and automated compliance filing (CAC/Tax).
+                    </p>
+                    <a href="#score"
+                        class="text-sm font-semibold text-primary-600 hover:text-primary-700 flex items-center">
+                        Learn about the Score <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </a>
                 </div>
 
-                <!-- Pillar 2: Government & Business Services -->
+                <!-- Feature Card 2: Sales & CRM Lite -->
                 <div
-                    class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100 group hover:shadow-xl transition duration-300">
-                    <i data-lucide="building" class="w-10 h-10 text-primary-600 mb-4 bg-primary-50 p-2 rounded-lg"></i>
-                    <h3 class="text-2xl font-bold mb-3">2. Government & Business Services</h3>
-                    <p class="text-slate-500 mb-4">Streamline operations with our single window to essential government
-                        services.</p>
-                    <ul class="space-y-2 text-slate-600 text-sm">
-                        <li class="flex items-start gap-2"><i data-lucide="chevrons-right"
-                                class="w-4 h-4 text-primary-500 flex-shrink-0 mt-1"></i> CAC Integration (Registration &
-                            Filing)</li>
-                        <li class="flex items-start gap-2"><i data-lucide="chevrons-right"
-                                class="w-4 h-4 text-primary-500 flex-shrink-0 mt-1"></i> SMEDAN Number & Certifications
+                    class="bg-white p-6 rounded-2xl shadow-xl border border-primary-200 group hover:shadow-2xl hover:border-primary-400 transition duration-300">
+                    <i data-lucide="user-check" class="w-8 h-8 text-primary-600 mb-3"></i>
+                    <h3 class="text-2xl font-bold mb-3">CRM & Sales Pipeline</h3>
+                    <p class="text-slate-500 mb-4">Manage leads, track customer interactions, and unify communication
+                        channels.</p>
+                    <a href="#mockup"
+                        class="text-sm font-semibold text-primary-600 hover:text-primary-700 flex items-center">
+                        See Dashboard <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </a>
+                </div>
+
+                <!-- Feature Card 3: E-commerce & Storefront -->
+                <div
+                    class="bg-white p-6 rounded-2xl shadow-xl border border-primary-200 group hover:shadow-2xl hover:border-primary-400 transition duration-300">
+                    <i data-lucide="store" class="w-8 h-8 text-primary-600 mb-3"></i>
+                    <h3 class="text-2xl font-bold mb-3">Marketplace & E-commerce</h3>
+                    <p class="text-slate-500 mb-4">Launch a digital storefront, manage inventory, and accept payments
+                        easily.</p>
+                    <a href="#mockup"
+                        class="text-sm font-semibold text-primary-600 hover:text-primary-700 flex items-center">
+                        Explore Marketplace <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </a>
+                </div>
+
+                <!-- Feature Card 4: Learning & Resources -->
+                <div
+                    class="bg-white p-6 rounded-2xl shadow-xl border border-primary-200 group hover:shadow-2xl hover:border-primary-400 transition duration-300">
+                    <i data-lucide="graduation-cap" class="w-8 h-8 text-primary-600 mb-3"></i>
+                    <h3 class="text-2xl font-bold mb-3">Training & Certifications</h3>
+                    <p class="text-slate-500 mb-4">Access SMEDAN-backed courses and actionable growth masterclasses.</p>
+                    <a href="#faq"
+                        class="text-sm font-semibold text-primary-600 hover:text-primary-700 flex items-center">
+                        View Resources <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </a>
+                </div>
+
+                <!-- Feature Card 5: HRM Lite -->
+                <div
+                    class="bg-white p-6 rounded-2xl shadow-xl border border-primary-200 group hover:shadow-2xl hover:border-primary-400 transition duration-300">
+                    <i data-lucide="users" class="w-8 h-8 text-primary-600 mb-3"></i>
+                    <h3 class="text-2xl font-bold mb-3">HRM Lite & Community</h3>
+                    <p class="text-slate-500 mb-4">Manage small teams, set tasks, and connect with peers in the Ascend
+                        Network.</p>
+                    <a href="#why-us"
+                        class="text-sm font-semibold text-primary-600 hover:text-primary-700 flex items-center">
+                        Join Community <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </a>
+                </div>
+
+                <!-- Feature Card 6: AI Analytics -->
+                <div
+                    class="bg-white p-6 rounded-2xl shadow-xl border border-primary-200 group hover:shadow-2xl hover:border-primary-400 transition duration-300">
+                    <i data-lucide="brain" class="w-8 h-8 text-primary-600 mb-3"></i>
+                    <h3 class="text-2xl font-bold mb-3">AI Insights & Reports</h3>
+                    <p class="text-slate-500 mb-4">Real-time business intelligence and AI advisory on cash flow and
+                        market trends.</p>
+                    <a href="#score"
+                        class="text-sm font-semibold text-primary-600 hover:text-primary-700 flex items-center">
+                        Explore Insights <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Why ASCEND? (Differentiators Section) -->
+    <section id="why-us" class="py-20 lg:py-28">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+                <!-- Image/Icon Block -->
+                <div class="relative bg-slate-100 p-8 rounded-2xl h-full flex items-center justify-center">
+                    <i data-lucide="map"
+                        class="w-32 h-32 text-primary-400 opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+                    <h3 class="text-4xl font-extrabold text-slate-800 z-10">Why We Are Different.</h3>
+                </div>
+
+                <!-- Differentiators List -->
+                <div>
+                    <span
+                        class="text-sm font-semibold text-accent bg-accent/20 px-3 py-1 rounded-full mb-3 inline-block">THE
+                        ASCEND ADVANTAGE</span>
+                    <h2 class="text-4xl md:text-5xl font-extrabold mb-6">Designed for the African SME Ecosystem</h2>
+                    <ul class="space-y-6">
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="check-circle" class="w-6 h-6 text-primary-600 flex-shrink-0 mt-1"></i>
+                            <div>
+                                <strong class="font-bold text-slate-800">Local Compliance First:</strong> Seamless
+                                integration with CAC, SMEDAN, and local regulatory requirements from day one.
+                            </div>
                         </li>
-                        <li class="flex items-start gap-2"><i data-lucide="chevrons-right"
-                                class="w-4 h-4 text-primary-500 flex-shrink-0 mt-1"></i> Tax & Regulatory Hub (TIN,
-                            Filings)</li>
-                    </ul>
-                </div>
-
-                <!-- Pillar 3: Compliance & Education -->
-                <div
-                    class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100 group hover:shadow-xl transition duration-300">
-                    <i data-lucide="book-open-text"
-                        class="w-10 h-10 text-primary-600 mb-4 bg-primary-50 p-2 rounded-lg"></i>
-                    <h3 class="text-2xl font-bold mb-3">3. Compliance & Education</h3>
-                    <p class="text-slate-500 mb-4">Build a resilient, knowledgeable enterprise with structured learning
-                        and automation.</p>
-                    <ul class="space-y-2 text-slate-600 text-sm">
-                        <li class="flex items-start gap-2"><i data-lucide="chevrons-right"
-                                class="w-4 h-4 text-primary-500 flex-shrink-0 mt-1"></i> SMEDAN-Backed Certification
-                            Courses</li>
-                        <li class="flex items-start gap-2"><i data-lucide="chevrons-right"
-                                class="w-4 h-4 text-primary-500 flex-shrink-0 mt-1"></i> Automated Compliance Calendar
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="maximize" class="w-6 h-6 text-primary-600 flex-shrink-0 mt-1"></i>
+                            <div>
+                                <strong class="font-bold text-slate-800">Scalable from Day Zero:</strong> Whether you're
+                                a micro-business or aiming for enterprise, our tools grow with your complexity.
+                            </div>
                         </li>
-                        <li class="flex items-start gap-2"><i data-lucide="chevrons-right"
-                                class="w-4 h-4 text-primary-500 flex-shrink-0 mt-1"></i> Template Library (Invoicing,
-                            HR, Plans)</li>
-                    </ul>
-                </div>
-
-                <!-- Pillar 4: Ecosystem & Network -->
-                <div
-                    class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100 group hover:shadow-xl transition duration-300">
-                    <i data-lucide="link" class="w-10 h-10 text-primary-600 mb-4 bg-primary-50 p-2 rounded-lg"></i>
-                    <h3 class="text-2xl font-bold mb-3">4. Ecosystem & Network</h3>
-                    <p class="text-slate-500 mb-4">Connect to the vital partners, suppliers, and opportunities that
-                        drive sustainable growth.</p>
-                    <ul class="space-y-2 text-slate-600 text-sm">
-                        <li class="flex items-start gap-2"><i data-lucide="chevrons-right"
-                                class="w-4 h-4 text-primary-500 flex-shrink-0 mt-1"></i> B2B/B2C Marketplace Listings
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="shield" class="w-6 h-6 text-primary-600 flex-shrink-0 mt-1"></i>
+                            <div>
+                                <strong class="font-bold text-slate-800">Bank-Grade Security:</strong> Your data and
+                                financial interactions are protected by world-class cloud security standards.
+                            </div>
                         </li>
-                        <li class="flex items-start gap-2"><i data-lucide="chevrons-right"
-                                class="w-4 h-4 text-primary-500 flex-shrink-0 mt-1"></i> Affiliate & Reseller Engine
-                            Management</li>
-                        <li class="flex items-start gap-2"><i data-lucide="chevrons-right"
-                                class="w-4 h-4 text-primary-500 flex-shrink-0 mt-1"></i> Industry & Community
-                            Groups/Forums</li>
-                    </ul>
-                </div>
-
-                <!-- Pillar 5: Navigation with Digital Tools -->
-                <div
-                    class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100 group hover:shadow-xl transition duration-300">
-                    <i data-lucide="compass" class="w-10 h-10 text-primary-600 mb-4 bg-primary-50 p-2 rounded-lg"></i>
-                    <h3 class="text-2xl font-bold mb-3">5. Navigation with Digital Tools</h3>
-                    <p class="text-slate-500 mb-4">Steer your business with real-time data, business intelligence, and
-                        intelligent automation.</p>
-                    <ul class="space-y-2 text-slate-600 text-sm">
-                        <li class="flex items-start gap-2"><i data-lucide="chevrons-right"
-                                class="w-4 h-4 text-primary-500 flex-shrink-0 mt-1"></i> Unified SME Dashboard</li>
-                        <li class="flex items-start gap-2"><i data-lucide="chevrons-right"
-                                class="w-4 h-4 text-primary-500 flex-shrink-0 mt-1"></i> AI Business Advisor (Cash flow,
-                            Trends)</li>
-                        <li class="flex items-start gap-2"><i data-lucide="chevrons-right"
-                                class="w-4 h-4 text-primary-500 flex-shrink-0 mt-1"></i> Integrated Software (CRM,
-                            Inventory, Invoicing)</li>
-                    </ul>
-                </div>
-
-                <!-- Pillar 6: Digital Marketplace -->
-                <div
-                    class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100 group hover:shadow-xl transition duration-300">
-                    <i data-lucide="store" class="w-10 h-10 text-primary-600 mb-4 bg-primary-50 p-2 rounded-lg"></i>
-                    <h3 class="text-2xl font-bold mb-3">6. Digital Marketplace</h3>
-                    <p class="text-slate-500 mb-4">Expand your reach and revenue channels with integrated storefront and
-                        marketing tools.</p>
-                    <ul class="space-y-2 text-slate-600 text-sm">
-                        <li class="flex items-start gap-2"><i data-lucide="chevrons-right"
-                                class="w-4 h-4 text-primary-500 flex-shrink-0 mt-1"></i> Digital Storefront & Payment
-                            Integration</li>
-                        <li class="flex items-start gap-2"><i data-lucide="chevrons-right"
-                                class="w-4 h-4 text-primary-500 flex-shrink-0 mt-1"></i> Lead Generation System
-                            (Connecting Customers)</li>
-                        <li class="flex items-start gap-2"><i data-lucide="chevrons-right"
-                                class="w-4 h-4 text-primary-500 flex-shrink-0 mt-1"></i> Marketing Tools (Email, SMS,
-                            Social Campaigns)</li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 4. Integrated Business Operating System (Detailing the tools) -->
-    <section id="os" class="py-20 lg:py-28 bg-slate-50">
+    <!-- 6. Platform Snapshot (Screens Mockup Section) -->
+    <section id="mockup" class="py-20 lg:py-28 bg-slate-900 text-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Take a Look Inside the Platform</h2>
+            <p class="text-xl text-primary-300 mb-16 max-w-3xl mx-auto">A unified experience means no more tabs.
+                Everything you need is right where you expect it to be.</p>
+
+            <div class="relative w-full overflow-x-hidden">
+                <!-- Laptop Mockup -->
+                <div class="w-11/12 mx-auto bg-white p-2 rounded-2xl mockup-frame transform rotate-1 perspective-[1000px] shadow-[0_25px_50px_-12px_rgba(37,99,235,0.7)]"
+                    style="transform: rotateX(5deg) rotateY(-5deg) rotateZ(2deg) scale(0.9); transition: all 0.5s ease-in-out;">
+                    <!-- Screen Content Placeholder -->
+                    <div class="h-96 bg-gradient-to-br from-primary-100 to-primary-300 rounded-lg p-6 flex items-start">
+                        <div class="w-1/4 h-full bg-slate-800 rounded-lg p-3">
+                            <div class="h-4 bg-primary-600 w-1/2 rounded mb-6"></div>
+                            <div class="h-3 bg-primary-400/50 w-3/4 rounded mb-2"></div>
+                            <div class="h-3 bg-primary-400/50 w-2/3 rounded mb-2"></div>
+                            <div class="h-3 bg-primary-400/50 w-full rounded mb-2"></div>
+                        </div>
+                        <div class="w-3/4 h-full p-4">
+                            <h4 class="text-2xl font-bold text-slate-800 mb-4">Unified Dashboard Overview</h4>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-white p-3 rounded-lg shadow-md">
+                                    <div class="h-4 bg-accent w-1/3 rounded mb-2"></div>
+                                    <div class="h-3 bg-slate-400 w-full rounded"></div>
+                                </div>
+                                <div class="bg-white p-3 rounded-lg shadow-md">
+                                    <div class="h-4 bg-accent w-1/3 rounded mb-2"></div>
+                                    <div class="h-3 bg-slate-400 w-full rounded"></div>
+                                </div>
+                                <div class="bg-white p-3 rounded-lg shadow-md col-span-2">
+                                    <div class="h-4 bg-primary-600 w-1/4 rounded mb-2"></div>
+                                    <div class="h-12 bg-slate-400 w-full rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Keyboard Base -->
+                <div class="w-full h-8 bg-slate-800 rounded-b-xl mt-[-1rem] relative z-0"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Trust & Testimonials -->
+    <section class="py-20 lg:py-28 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Your All-in-One Business Operating System</h2>
-                <p class="text-xl text-slate-600">The Ascending platform integrates powerful, day-to-day tools directly
-                    into your dashboard, eliminating app overload and manual switching.</p>
+                <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Voices of Ascending SMEs</h2>
+                <p class="text-xl text-slate-600">Real impact. Real growth. See what our early users are saying.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-                <!-- Tool 1: CRM -->
-                <div class="p-8 bg-white rounded-2xl shadow-xl border border-slate-100">
-                    <i data-lucide="user-plus" class="w-8 h-8 text-primary-600 mb-3"></i>
-                    <h3 class="text-2xl font-bold mb-4">Customer Relationship Management (CRM)</h3>
-                    <ul class="space-y-3 text-slate-600">
-                        <li class="flex items-start gap-2"><i data-lucide="check"
-                                class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i> Manage unlimited contacts with
-                            smart tagging.</li>
-                        <li class="flex items-start gap-2"><i data-lucide="check"
-                                class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i> Unified inbox for SMS, email,
-                            calls, and social messages (WhatsApp, Instagram, Facebook).</li>
-                        <li class="flex items-start gap-2"><i data-lucide="check"
-                                class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i> Visual pipeline management and
-                            built-in appointment scheduling.</li>
-                    </ul>
+                <div class="bg-slate-50 p-6 rounded-xl shadow-lg border-t-4 border-accent">
+                    <i data-lucide="quote" class="w-8 h-8 text-accent mb-4"></i>
+                    <p class="text-lg italic mb-6 text-slate-700">"Compliance used to be a nightmare. Now, with
+                        Ascending, we literally press a button and know we're good to go. The funding connections alone
+                        paid for the subscription."</p>
+                    <div class="font-semibold text-primary-600">— Nkechi A.</div>
+                    <div class="text-sm text-slate-500">Founder, Swift Logistics</div>
                 </div>
 
-                <!-- Tool 2: Marketing & Communication Suite -->
-                <div class="p-8 bg-white rounded-2xl shadow-xl border border-slate-100">
-                    <i data-lucide="megaphone" class="w-8 h-8 text-primary-600 mb-3"></i>
-                    <h3 class="text-2xl font-bold mb-4">Marketing & Communication Suite</h3>
-                    <ul class="space-y-3 text-slate-600">
-                        <li class="flex items-start gap-2"><i data-lucide="check"
-                                class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i> Run email and SMS broadcast
-                            campaigns and automated drip sequences.</li>
-                        <li class="flex items-start gap-2"><i data-lucide="check"
-                                class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i> Use AI-powered bots for instant
-                            customer engagement.</li>
-                        <li class="flex items-start gap-2"><i data-lucide="check"
-                                class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i> Built-in phone system with call
-                            tracking and automated follow-ups.</li>
-                    </ul>
+                <div class="bg-slate-50 p-6 rounded-xl shadow-lg border-t-4 border-accent">
+                    <i data-lucide="quote" class="w-8 h-8 text-accent mb-4"></i>
+                    <p class="text-lg italic mb-6 text-slate-700">"The integrated CRM and marketing tools allowed us to
+                        finally ditch three different subscriptions. Our operational efficiency has increased by over
+                        30%."</p>
+                    <div class="font-semibold text-primary-600">— Tunde O.</div>
+                    <div class="text-sm text-slate-500">CEO, Digital Innovators Hub</div>
                 </div>
 
-                <!-- Tool 3: Website, Funnel & Social Management -->
-                <div class="p-8 bg-white rounded-2xl shadow-xl border border-slate-100">
-                    <i data-lucide="globe" class="w-8 h-8 text-primary-600 mb-3"></i>
-                    <h3 class="text-2xl font-bold mb-4">Website, Funnel & Social Management</h3>
-                    <ul class="space-y-3 text-slate-600">
-                        <li class="flex items-start gap-2"><i data-lucide="check"
-                                class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i> Build professional websites and
-                            high-converting sales funnels.</li>
-                        <li class="flex items-start gap-2"><i data-lucide="check"
-                                class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i> Schedule posts and manage
-                            reputation across major platforms.</li>
-                        <li class="flex items-start gap-2"><i data-lucide="check"
-                                class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i> Create blogs or membership
-                            sites to build authority.</li>
-                    </ul>
-                </div>
-
-                <!-- Tool 4: Analytics, AI & Integration Hub -->
-                <div class="p-8 bg-white rounded-2xl shadow-xl border border-slate-100">
-                    <i data-lucide="layout-dashboard" class="w-8 h-8 text-primary-600 mb-3"></i>
-                    <h3 class="text-2xl font-bold mb-4">Analytics, AI & Integration Hub</h3>
-                    <ul class="space-y-3 text-slate-600">
-                        <li class="flex items-start gap-2"><i data-lucide="check"
-                                class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i> Make decisions with clear
-                            campaign dashboards and ROI reports.</li>
-                        <li class="flex items-start gap-2"><i data-lucide="check"
-                                class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i> Generate marketing copy and
-                            automate tasks with AI tools.</li>
-                        <li class="flex items-start gap-2"><i data-lucide="check"
-                                class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i> Connect to everything via
-                            Zapier, Webhooks, and API access (Stripe/PayPal payments).</li>
-                    </ul>
+                <div class="bg-slate-50 p-6 rounded-xl shadow-lg border-t-4 border-accent">
+                    <i data-lucide="quote" class="w-8 h-8 text-accent mb-4"></i>
+                    <p class="text-lg italic mb-6 text-slate-700">"The Ascending Score gave us a clear roadmap. Within
+                        six months of improving our score, we secured a major commercial loan we'd been trying to get
+                        for two years."</p>
+                    <div class="font-semibold text-primary-600">— Amina G.</div>
+                    <div class="text-sm text-slate-500">Director, Food Chain Systems</div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- 8. Partnerships & Collaborators -->
+    <section id="partners" class="py-16 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h3 class="text-xl font-semibold text-slate-600 mb-8">Trusted Collaborators & Strategic Partners</h3>
+            <div class="flex flex-wrap justify-center items-center gap-10 md:gap-16 opacity-70">
+                <!-- Placeholder Logos -->
+                <img src="https://placehold.co/120x40/f1f5f9/1e293b?text=GOV+AGENCY" alt="Gov Agency Placeholder"
+                    class="h-8 md:h-10 transition duration-300 hover:opacity-100">
+                <img src="https://placehold.co/100x40/f1f5f9/1e293b?text=FINTECH+BANK" alt="Fintech Bank Placeholder"
+                    class="h-8 md:h-10 transition duration-300 hover:opacity-100">
+                <img src="https://placehold.co/140x40/f1f5f9/1e293b?text=BUSINESS+HUB" alt="Business Hub Placeholder"
+                    class="h-8 md:h-10 transition duration-300 hover:opacity-100">
+                <img src="https://placehold.co/100x40/f1f5f9/1e293b?text=NGO+PARTNER" alt="NGO Partner Placeholder"
+                    class="h-8 md:h-10 transition duration-300 hover:opacity-100">
+            </div>
+        </div>
+    </section>
 
-    <!-- 5. Final CTA -->
+    <!-- 9. FAQ Section -->
+    <section id="faq" class="py-20 lg:py-28">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Frequently Asked Questions</h2>
+                <p class="text-xl text-slate-600">Quick answers to the questions we get asked the most.</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- FAQ Item 1 -->
+                <div class="bg-white p-5 rounded-xl shadow-md border border-slate-100">
+                    <details>
+                        <summary
+                            class="font-semibold text-lg cursor-pointer text-slate-800 hover:text-primary-600 transition duration-150">
+                            Is ASCEND only for Nigerian businesses?</summary>
+                        <p class="text-slate-600 pt-3 pl-4 border-l-2 border-primary-500 mt-2">While we are optimized
+                            for the Nigerian regulatory and financial environment (e.g., CAC, SMEDAN), the core business
+                            tools (CRM, Marketing, E-commerce) are universally beneficial for any SME operating in
+                            Africa.</p>
+                    </details>
+                </div>
+                <!-- FAQ Item 2 -->
+                <div class="bg-white p-5 rounded-xl shadow-md border border-slate-100">
+                    <details>
+                        <summary
+                            class="font-semibold text-lg cursor-pointer text-slate-800 hover:text-primary-600 transition duration-150">
+                            Do I need technical knowledge to use the platform?</summary>
+                        <p class="text-slate-600 pt-3 pl-4 border-l-2 border-primary-500 mt-2">Absolutely not. ASCEND is
+                            built for ease of use. If you can use a smartphone, you can run your business on ASCEND. We
+                            handle all the complexity so you can focus on growth.</p>
+                    </details>
+                </div>
+                <!-- FAQ Item 3 -->
+                <div class="bg-white p-5 rounded-xl shadow-md border border-slate-100">
+                    <details>
+                        <summary
+                            class="font-semibold text-lg cursor-pointer text-slate-800 hover:text-primary-600 transition duration-150">
+                            How does the 'Access to Finance' pillar work?</summary>
+                        <p class="text-slate-600 pt-3 pl-4 border-l-2 border-primary-500 mt-2">We analyze your business
+                            data to calculate your **Ascending Score** which acts as a pre-qualification metric. This
+                            score is shared with our network of approved lenders and grant providers, ensuring you only
+                            apply for funding you are eligible for, dramatically increasing your success rate.</p>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. Final CTA & Newsletter -->
     <section id="cta" class="py-20 lg:py-28 bg-primary-700 text-white">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-4xl md:text-5xl font-extrabold mb-6">Start Your Ascent Today</h2>
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-6">Ready to Transform Your Business?</h2>
             <p class="text-xl text-primary-200 mb-10">
-                Why choose Ascending? We are Nigeria’s only platform that combines strategic business empowerment with a
-                powerful, unified operating system. We don’t just give you tools; we provide the roadmap and the vehicle
-                for your growth.
+                Join thousands of forward-thinking SMEs who are digitizing their operations and accessing new growth
+                pathways.
             </p>
 
-            <div class="space-y-6">
-                <!-- CTA 1: For SMEs -->
-                <div class="bg-white p-6 rounded-xl text-slate-900 shadow-2xl">
-                    <h3 class="text-2xl font-bold mb-2">For SMEs: Integrated Journey</h3>
-                    <p class="mb-4 text-slate-600">Begin your climb to formality, funding, and profitability.</p>
-                    <a href="#"
-                        class="w-full sm:w-auto inline-block bg-primary-600 text-white font-bold py-3 px-8 rounded-xl text-lg shadow-lg hover:bg-primary-700 transition duration-300">
-                        Sign Up for Early Access
-                    </a>
-                </div>
+            <!-- CTA Button -->
+            <a href="#"
+                class="inline-block bg-accent text-slate-900 font-bold py-4 px-12 rounded-xl text-lg shadow-lg shadow-accent/50 hover:bg-amber-500 transition duration-300 transform hover:scale-[1.05]">
+                Start My 14-Day Free Trial
+            </a>
 
-                <!-- CTA 2: For Partners & Resellers -->
-                <div class="bg-slate-800 p-6 rounded-xl text-white shadow-2xl">
-                    <h3 class="text-2xl font-bold mb-2">For Partners & Resellers: White-Label SaaS</h3>
-                    <p class="mb-4 text-primary-200">Leverage our white-label SaaS mode to offer Ascending under your
-                        brand.</p>
-                    <a href="#"
-                        class="w-full sm:w-auto inline-block bg-primary-500 text-white font-bold py-3 px-8 rounded-xl text-lg shadow-lg hover:bg-primary-600 transition duration-300">
-                        Explore Partner Program
-                    </a>
-                </div>
-
-                <!-- CTA 3: For Collaborators -->
-                <div class="bg-slate-800 p-6 rounded-xl text-white shadow-2xl">
-                    <h3 class="text-2xl font-bold mb-2">For Government & Institutional Collaborators</h3>
-                    <p class="mb-4 text-primary-200">Let’s discuss how Ascending can amplify your SME development
-                        initiatives.</p>
-                    <a href="#"
-                        class="w-full sm:w-auto inline-block bg-primary-500 text-white font-bold py-3 px-8 rounded-xl text-lg shadow-lg hover:bg-primary-600 transition duration-300">
-                        Contact Our Team
-                    </a>
-                </div>
+            <!-- Newsletter Sign-Up -->
+            <div class="mt-12 pt-8 border-t border-primary-600">
+                <h3 class="text-2xl font-bold mb-4 text-primary-100">Get Weekly SME Growth Tips</h3>
+                <form class="max-w-md mx-auto flex flex-col sm:flex-row gap-3">
+                    <input type="email" placeholder="Enter your email address"
+                        class="w-full px-5 py-3 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-accent"
+                        required>
+                    <button type="submit"
+                        class="bg-slate-900 text-white font-semibold py-3 px-6 rounded-xl hover:bg-slate-700 transition duration-300 flex-shrink-0">
+                        Subscribe
+                    </button>
+                </form>
             </div>
-            <p class="mt-12 text-2xl font-bold text-primary-300">ASCEND with us. Grow beyond.</p>
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- 11. Footer -->
     <footer class="bg-slate-900 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="text-xl font-extrabold text-primary-500 mb-4">Ascending.</div>
-            <div class="flex justify-center space-x-6 text-sm mb-6">
-                <a href="#pillars" class="hover:text-primary-400 transition-colors">Features</a>
-                <a href="pricing.html" class="hover:text-primary-400 transition-colors">Pricing</a>
-                <a href="terms.html" class="hover:text-primary-400 transition-colors">Terms of Service</a>
-                <a href="privacy.html" class="hover:text-primary-400 transition-colors">Privacy Policy</a>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="text-lg font-extrabold text-primary-500 mb-4">Ascending.</div>
+                    <p class="text-sm text-slate-500">The Ultimate Digital Advantage for African SMEs.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-primary-300 mb-4">Platform</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#features" class="text-slate-400 hover:text-primary-400 transition-colors">Unified
+                                OS Tools</a></li>
+                        <li><a href="#score" class="text-slate-400 hover:text-primary-400 transition-colors">Ascending
+                                Score™</a></li>
+                        <li><a href="#how-it-works" class="text-slate-400 hover:text-primary-400 transition-colors">How
+                                It Works</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-primary-300 mb-4">Company</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#why-us" class="text-slate-400 hover:text-primary-400 transition-colors">Why Choose
+                                Us</a></li>
+                        <li><a href="#partners"
+                                class="text-slate-400 hover:text-primary-400 transition-colors">Partnerships</a></li>
+                        <li><a href="pricing.html"
+                                class="text-slate-400 hover:text-primary-400 transition-colors">Pricing Overview</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-primary-300 mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="terms.html" class="text-slate-400 hover:text-primary-400 transition-colors">Terms
+                                of Service</a></li>
+                        <li><a href="privacy.html"
+                                class="text-slate-400 hover:text-primary-400 transition-colors">Privacy Policy</a></li>
+                        <li><a href="#faq" class="text-slate-400 hover:text-primary-400 transition-colors">FAQ</a></li>
+                    </ul>
+                </div>
             </div>
-            <p class="text-slate-500 text-sm">&copy; 2025 Ascending Platform. All rights reserved. Built for Nigerian
-                SMEs.</p>
+            <p class="text-slate-500 text-sm border-t border-slate-800 pt-6 text-center">&copy; 2025 Ascending Platform.
+                All rights reserved. Built for Nigerian SMEs.</p>
         </div>
     </footer>
 
@@ -420,7 +623,7 @@
                 <!-- Placeholder for the actual embedded video -->
                 <div
                     class="aspect-video bg-slate-200 flex items-center justify-center rounded-lg text-slate-600 font-semibold border-4 border-dashed border-slate-300">
-                    [Video Embed Placeholder: Replace this with your YouTube/Vimeo/Self-hosted iframe code]
+                    [Video Embed Placeholder: Your explainer video goes here]
                 </div>
                 <div class="mt-4 text-sm text-slate-500">Video will showcase the Unified SME Dashboard and key
                     Compliance features.</div>
@@ -431,7 +634,7 @@
     </div>
 
     <script>
-        // Modal Logic
+        // --- Modal Logic ---
         const modal = document.getElementById('video-modal');
         const openBtn = document.getElementById('open-video-modal');
         const closeBtn = document.getElementById('close-video-modal');
@@ -460,18 +663,76 @@
             });
         }
 
+        // --- Mobile Menu Logic ---
+        const menuButton = document.getElementById('mobile-menu-button');
+        const closeMenuButton = document.getElementById('close-mobile-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navLinks = mobileMenu.querySelectorAll('a');
 
-        // Smooth Scroll for internal navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        menuButton.addEventListener('click', toggleMobileMenu);
+        closeMenuButton.addEventListener('click', toggleMobileMenu);
+
+        // Close menu when a link is clicked
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
             });
         });
 
-        lucide.createIcons();
+        // --- Animated Metrics Counter Logic ---
+        const metrics = [
+            { id: 'metric-1', target: 1200, label: '+' },
+            { id: 'metric-2', target: 600, label: '+' },
+            { id: 'metric-3', target: 85, label: '%' },
+            { id: 'metric-4', target: 10, label: '+' }
+        ];
+
+        function animateCount(element, start, end, duration, label) {
+            let startTime;
+            const step = (timestamp) => {
+                if (!startTime) startTime = timestamp;
+                const progress = timestamp - startTime;
+                const percentage = Math.min(progress / duration, 1);
+                const currentValue = Math.floor(percentage * (end - start) + start);
+                element.textContent = currentValue.toLocaleString() + label;
+                if (percentage < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    element.textContent = end.toLocaleString() + label;
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        const metricsSection = document.getElementById('metrics');
+        let metricsAnimated = false;
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !metricsAnimated) {
+                    metrics.forEach(metric => {
+                        const element = document.getElementById(metric.id);
+                        animateCount(element, 0, metric.target, 2000, metric.label);
+                    });
+                    metricsAnimated = true;
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 }); // Trigger when 50% of the section is visible
+
+        if (metricsSection) {
+            observer.observe(metricsSection);
+        }
+
+        // --- General Utility ---
+        // Create Lucide icons after the DOM is fully loaded
+        window.addEventListener('load', () => {
+            lucide.createIcons();
+        });
     </script>
 </body>
 
